@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/bulk_cli.dir/cmd_processing.cpp.o -o bulk_cli  libbulk.a libloger.a 
