@@ -1,3 +1,5 @@
+#pragma once
+
 #include <fstream>
 #include <filesystem>
 #include <string>
@@ -5,8 +7,8 @@
 #include <vector>
 #include <list>
 
-#ifndef LOGER_H
-#define LOGER_H
+//#ifndef LOGER_H
+//#define LOGER_H
 
 using namespace std;
 
@@ -94,4 +96,4 @@ class Loger {
 
 };
 
-#endif
+//#endif

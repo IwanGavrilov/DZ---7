@@ -1,10 +1,12 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <list>
 #include <queue>
 
-#ifndef PRINT_LIB_H
-#define PRINT_LIB_H
+// #ifndef PRINT_LIB_H
+// #define PRINT_LIB_H
 
 /* печатаем контейнеры
     формат вывода value[0] value[1] ... value[n]
@@ -57,4 +59,4 @@ print_value(T && sValue)
     std::cout << sValue << std::endl;
 }
 
-#endif
+// #endif
