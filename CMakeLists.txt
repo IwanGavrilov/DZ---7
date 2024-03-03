@@ -15,6 +15,7 @@ configure_file(version.h.in version.h)
 add_executable(bulk_cli cmd_processing.cpp)
 add_library(bulk lib.cpp)
 add_library(loger loger.cpp)
+add_library(observer observer.cpp)
 
 set_target_properties(bulk_cli loger PROPERTIES
     CXX_STANDARD 17
@@ -24,6 +25,7 @@ target_include_directories(bulk PRIVATE "${CMAKE_BINARY_DIR}")
 
 target_link_libraries(bulk_cli PRIVATE bulk)
 target_link_libraries(bulk_cli PRIVATE loger)
+target_link_libraries(bulk_cli PRIVATE observer)
 
 if (MSVC)
     target_compile_options(bulk_cli PRIVATE

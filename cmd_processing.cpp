@@ -8,6 +8,7 @@
 #include "lib.h"
 #include "print_lib.h"
 #include "loger.h"
+#include "observer.h"
 
 static int n_cnt_block_cmd = 0;    // кол-во команд в блоке. задается командной строкой
 static int n_cnt_open = 0;        // кол-во открытых скобок.
@@ -27,7 +28,7 @@ void eraze_queue(std::queue<std::string> * _queue)
 void print_queue(std::queue<std::string> * _queue, Loger * _loger)
 {
     if (_queue->empty()) {
-        // если очередь пуста, смусл что-то печатать
+        // если очередь пуста, смысл что-то печатать
         return;
     }
     int idx = 0;
@@ -43,10 +44,11 @@ void print_queue(std::queue<std::string> * _queue, Loger * _loger)
     s_print = "";
 }
 
+
 int main()
 {
     std::queue<std::string> cmd_queue;
-    
+
     std::cout << "Указать кол-во команд в статическом блоке : ";
     std::cin >> n_cnt_block_cmd;
     std::cout << std::endl;
@@ -58,6 +60,10 @@ int main()
     time_t tm_new = time(0);    
     // формируется имя файла logа
     std::string s_file_name = "bulk" + std::to_string(tm_new) + ".log";
+    
+    Subject subject = Subject();                                // создаю объект
+    Observer observer = Observer(&subject, s_file_name);        // создаю подписчика
+    subject.Attach(&observer);                                  // добавляю к объекту подписчика
     
     Loger lgr(s_file_name);
     
@@ -71,7 +77,8 @@ int main()
         if(s_line == "{") {
             if (n_cnt_open == 0) {
                 // если первый раз ввели { - начинаем вводить динамический блок
-                print_queue(&cmd_queue, &lgr);
+                // print_queue(&cmd_queue, &lgr);
+                subject.SetValue(&cmd_queue);                   // вызов изменения в объекте
                 n_cnt_input_cmd = 0;
             }
             n_cnt_open++;
@@ -80,7 +87,8 @@ int main()
             // если ввели } и счеткики открытых и закрытых скобок равны, то значит закончился динамический блок
             n_cnt_close++;
             if (n_cnt_open == n_cnt_close) {
-                print_queue(&cmd_queue, &lgr);
+                // print_queue(&cmd_queue, &lgr);
+                subject.SetValue(&cmd_queue);                  // вызов изменения в объекте
                 n_cnt_open = 0;
                 n_cnt_close = 0;
                 n_cnt_input_cmd = 0;
@@ -88,7 +96,8 @@ int main()
         }
         if ((n_cnt_input_cmd == n_cnt_block_cmd) && (n_cnt_open == 0)) {
             // выводим результат если ввели нужное число команд и не вводили динамический блок
-            print_queue(& cmd_queue, &lgr);
+            // print_queue(& cmd_queue, &lgr);
+            subject.SetValue(&cmd_queue);                      // вызов изменения в объекте
             n_cnt_input_cmd = 0;
         }
         std::cin >> s_line;
@@ -96,7 +105,8 @@ int main()
 
     // если что-то осталось в очереди, то выводим это что-то
     if(!cmd_queue.empty()) {
-        print_queue(&cmd_queue, &lgr);
+        // print_queue(&cmd_queue, &lgr);
+        subject.SetValue(&cmd_queue);                         // вызов изменения в объекте
     }
     
     return 0;
